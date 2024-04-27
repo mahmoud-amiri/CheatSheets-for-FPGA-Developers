@@ -1,7 +1,7 @@
 ---
-title: CheatSheet-Name CheatSheet
-description: The most commonly used CheatSheet-Name commands/keyboard-shortcuts/concepts/tags/properties/attributes are given here.
-created: 2022-10-01
+title: VHDL CheatSheet
+description: The most commonly used VHDL syntaxes are given here.
+created: 2024-04-27
 ---
 
 ## Table of Contents
@@ -16,6 +16,9 @@ created: 2022-10-01
   - [Data type conversions](#data-type-conversions)
   - [Operators](#operators)
   - [Conditions](#conditions)
+  - [Testbench template](#testbench-template)
+  - [Read from file and write to file](#read-from-file-and-write-to-file)
+  - [assert](#assert)
 
 # VHDL CheatSheet for Developers
 
@@ -399,4 +402,184 @@ result <= a when sel = '1' else b;
 ```
 **[🔼Back to Top](#table-of-contents)**
 
+## Testbench template
 
+```vhdl
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL; -- Only if you're using numeric_std functions
+
+-- Entity declaration for the testbench
+-- Note: Testbenches do not have ports
+entity tb_MyDesign is
+end tb_MyDesign;
+
+-- Architecture of the testbench
+architecture behavior of tb_MyDesign is
+
+    -- Component declaration of the design under test (DUT)
+    component MyDesign
+        port (
+            clk        : in  std_logic;
+            reset      : in  std_logic;
+            input_sig  : in  std_logic_vector(7 downto 0);
+            output_sig : out std_logic_vector(7 downto 0)
+        );
+    end component;
+
+    -- Signals for connecting to the DUT
+    signal tb_clk        : std_logic := '0';
+    signal tb_reset      : std_logic;
+    signal tb_input_sig  : std_logic_vector(7 downto 0);
+    signal tb_output_sig : std_logic_vector(7 downto 0);
+
+    -- Clock period definition
+    constant clk_period : time := 10 ns;
+
+begin
+
+    -- Instantiation of the DUT
+    uut: MyDesign
+        port map (
+            clk        => tb_clk,
+            reset      => tb_reset,
+            input_sig  => tb_input_sig,
+            output_sig => tb_output_sig
+        );
+
+    -- Clock process definition
+    clk_process : process
+    begin
+        tb_clk <= '0';
+        wait for clk_period/2;
+        tb_clk <= '1';
+        wait for clk_period/2;
+    end process;
+
+    -- Test stimulus process
+    stim_proc: process
+    begin       
+        -- Initialize Inputs
+        tb_reset <= '1';
+        tb_input_sig <= (others => '0');
+        
+        -- Wait for 100 ns for global reset to finish
+        wait for 100 ns;
+        
+        -- Add stimulus here
+        tb_reset <= '0';
+        wait for clk_period*10;
+        
+        tb_input_sig <= "00000001";
+        wait for clk_period*10;
+        
+        tb_input_sig <= "00000010";
+        wait for clk_period*10;
+
+        -- Finish the test and check the results
+        assert false report "End of test" severity failure;
+
+    end process;
+
+end behavior;
+
+```
+**[🔼Back to Top](#table-of-contents)**
+
+## Read from file and write to file
+
+```vhdl
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_TEXTIO.ALL; -- For textio operations
+use STD.TEXTIO.ALL; -- For textio operations
+
+-- Entity declaration for the testbench
+entity ReadFileTB is
+end ReadFileTB;
+
+-- Architecture of the testbench
+architecture Behavioral of ReadFileTB is
+
+    -- File type declaration
+    file file_in : TEXT open READ_MODE is "input_file.txt";
+
+begin
+
+    -- Reading file process
+    process
+        variable line : LINE; -- Temporary storage for each line read
+        variable value_read : std_logic_vector(7 downto 0); -- Modify as needed
+    begin
+        -- Read until the end of the file
+        while not endfile(file_in) loop
+            readline(file_in, line); -- Read a line from the file
+            read(line, value_read); -- Parse the line into a variable
+            -- Now value_read contains the data from the file for further processing
+        end loop;
+
+        wait; -- Stop the simulation here
+    end process;
+
+end Behavioral;
+
+```
+
+```vhdl
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_TEXTIO.ALL; -- For textio operations
+use STD.TEXTIO.ALL; -- For textio operations
+
+-- Entity declaration for the testbench
+entity WriteFileTB is
+end WriteFileTB;
+
+-- Architecture of the testbench
+architecture Behavioral of WriteFileTB is
+
+    -- File type declaration
+    file file_out : TEXT open WRITE_MODE is "output_file.txt";
+
+begin
+
+    -- Writing file process
+    process
+        variable line : LINE; -- Temporary storage for data to write
+    begin
+        -- Example: Write 10 lines to the file
+        for i in 1 to 10 loop
+            write(line, std_logic_vector(to_unsigned(i, 8))); -- Convert integer to std_logic_vector and write to the line
+            writeline(file_out, line); -- Write the line to the file
+        end loop;
+
+        wait; -- Stop the simulation here
+    end process;
+
+end Behavioral;
+
+```
+
+**[🔼Back to Top](#table-of-contents)**
+
+## assert
+
+```vhdl
+-- Check if the output is as expected
+assert (output_signal = expected_value)
+    report "Output signal does not match expected value."
+    severity error;
+
+-- Check if a signal is stable when it should be
+assert not (signal'event and signal = '1')
+    report "Signal should not have an event here."
+    severity warning;
+
+-- Terminate the simulation if a certain condition is not met
+assert (system_state = READY)
+    report "System is not ready. Simulation failed."
+    severity failure; -- This will stop the simulation if system_state /= READ
+
+```
+
+**[🔼Back to Top](#table-of-contents)**
