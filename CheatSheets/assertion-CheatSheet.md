@@ -45,12 +45,12 @@ endsequence
 
 Implication operator
 ```systemverilog
-// The |-> symbol represents the overlapped implication operator.Consequent evaluation starts immediately if the antecedent is true.It's akin to an if-then structure.
+// The |-> symbol represents the overlapped implication operator.if signal "a" is high on a given positive clock edge, then signal "b" should also be high on the same clock edge
 property p;
 @(posedge clk) a|->b;
 endproperty
 
-//The |=> symbol denotes the non-overlapped implication operator.Consequent evaluation begins in the next clock cycle if the antecedent holds true.If "a" is high at a positive clock edge, "b" should be high at the subsequent clock edge.
+//The |=> symbol denotes the non-overlapped implication operator.If "a" is high at a positive clock edge, "b" should be high at the next clock edge.
 property p;
 @(posedge clk) a |=> b;
 endproperty
@@ -65,7 +65,9 @@ endproperty
 property p;
 @(posedge clk) a |-> ##[n:m] b;
 endproperty
-
+```
+repetition operator
+```systemverilog
 //If a sequence of events occurs repeatedly for n times, it's represented as [*n].(n > 0, n < $)
 //if req1 is true, req2 must be true for n consecutive clock cycles after 1 clock cycle.
 sequence seq;
@@ -87,6 +89,80 @@ endsequence
 sequence seq;
 @(posedge clk) req1 ##1 req2[=n:m];
 endsequence
+```
+
+```systemverilog
+//return true if LSB of signal changed to 1.
+sequence seq;
+@(posedge clk) $rose(a);
+endsequence
+
+//return true if LSB of signal changed to 0.
+sequence seq;
+@(posedge clk) $fell(a);
+endsequence
+
+//return true if the value of signal did not changed.
+sequence seq;
+@(posedge clk) $stable(a);
+endsequence
+```
+The "ended" construct
+```systemverilog
+//Attaching ended to a sequence name, such as s.ended, indicates that you are referring to the exact clock cycle in which the sequence s completes.
+sequence sl5a;
+  ©(posedge elk) a ##n1 b;
+endsequence
+sequence sl5b;
+  ©{posedge elk) c ##n2 d;
+endsequence
+
+//after the sequence sla completes, the sequence slb should begin immediately in the next clock cycle
+property pla;
+sla |=> slb;
+endproperty
+
+//n3 clock cycles after the sequence sla ends, the sequence slb must also end. 
+property plb;
+  sla.ended |-> ##n3 slb.ended;
+endproperty
+
+ala: assert property(pla);
+alb: assert property(plb);
+```
+
+The "$past" construct
+```systemverilog
+//it provides the value of the signal from the previous clock cycle. Property p1 verifies that at a given positive clock edge, if the expression (a) is true, then n cycles earlier, the expression (b) was true.
+Property p1;
+@(posedge clk) a |-> ($past(b, n) == I'bl);
+endproperty
+al: assert property(pl);
+```
+
+combine two sequences
+```systemverilog
+//and:The final property succeeds only if both sequences succeed. They must start at the same point but can end at different points.
+sequence s1a;
+@(posedge elk) a##[l:2] b;
+endsequence
+sequence s2b;
+@(posedge elk) c##[2:3] d;
+endsequence
+property p2;
+@{posedge elk) s2a and s2b;
+endproperty
+a2: assert property(p2);
+
+//intersect:very similar to the "and" operator, The final property succeeds only if both sequences succeed, both sequences must start and end simultaneously, meaning they must have the same length.
+property p2;
+@{posedge clk) s2a intersect s2b;
+endproperty
+
+//Or: The final property succeeds when any one of the sequences succeed
+property p2;
+@(posedge clk) s2a or s2b;
+endproperty
 ```
 **[🔼Back to Top](#table-of-contents)**
 
@@ -118,3 +194,36 @@ endproperty
   coverage_name: cover_property( property_name );
 ```
 **[🔼Back to Top](#table-of-contents)**
+
+
+
+
+
+
+
+```systemverilog
+// Registers and outputs at reset: 
+//Checks that when reset is not active, data and addr must be zero
+    property reset_check;
+        (!rst_n) |-> (data === 32'b0 && addr === 32'b0);
+    endproperty
+
+    assert property (reset_check)
+        else $error("Assertion failed: data or addr not zero when reset is inactive.");
+
+//Restrictions on control and data signals:   
+// Assert that control signals are known (not x or z)
+    assert property (@(posedge clk) !$isunknown(ctrl))
+        else $error("Error: Control signals contain unknown values");  
+// Assert that at most one control signal is high at a time
+    assert property (@(posedge clk) $onehot0(ctrl))
+        else $error("Error: Multiple control signals are active simultaneously");
+
+    // Assert that cmd signal must be either READ or WRITE
+    assert property (@(posedge clk) cmd inside {READ, WRITE})
+        else $error("Error: Command signal is out of expected range");
+
+
+//Handshaking protocols:
+
+```
