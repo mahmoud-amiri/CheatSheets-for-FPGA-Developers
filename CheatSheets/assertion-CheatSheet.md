@@ -163,6 +163,53 @@ endproperty
 property p2;
 @(posedge clk) s2a or s2b;
 endproperty
+
+//first_match: The "first_match" construct ensures that only the initial sequence match is utilized, disregarding others. This is valuable when merging multiple sequences, as only the first match within the timing window is needed to evaluate the property further.
+property p3;
+@(posedge clk) first_match(s2a or s2b);
+endproperty
+
+//throughout:The throughout operator in SVA is used when you need the expression to be true at every clock cycle throughout the duration of the specified sequence.
+//This part of the property ensures that during the entire evaluation of the sequence, the signal "start" must always be low. 
+property p1;
+@(posedge clk) $fell(start) |->(!start) throughout (##1 (!a&&b) ##1 (c[->5]) ##1 (a&&!b));
+endproperty
+
+//within:The "within" construct permits the definition of a sequence contained within another sequence.
+sequence s3a;
+  @(posedge clk)
+    ((!a&&b) ##1 (c[->5]) ##1 (a&&!b));
+endsequence
+sequence s3b;
+  @(posedge clk)
+    $fell(start) ##[15:20] $rose(start);
+endsequence
+sequence s3;
+  @(posedge clk) s3a within s3b;
+endsequence
+property p3;
+  @(posedge clk) $fell(start) |-> s3;
+endproperty
+a3: assert property(p3);
+```
+
+Built-in system function
+```systemverilog
+//onehot: only one bit of the expression can be high on any given clock edge
+a1a: assert
+  property(@(posedge elk) $onehot(state));
+
+//onehot0: only one bit of the expression can be high or none of the bits can be high on any given clock edge.
+a1b: assert
+  property(@(posedge elk) $onehot0(state));
+
+//isunknown: checks if any bit of the expression is X or Z  
+a1c: assert
+  property (@(posedge elk) $isunknown(bus) ) ;
+
+//countones: counts the number of bits that are high in a vector  
+a1d: assert
+  property(@(posedge elk)$countones(bus)> 1);
 ```
 **[🔼Back to Top](#table-of-contents)**
 
