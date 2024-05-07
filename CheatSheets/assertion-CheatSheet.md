@@ -211,6 +211,16 @@ a1c: assert
 a1d: assert
   property(@(posedge elk)$countones(bus)> 1);
 ```
+
+```systemverilog
+//In specific design scenarios, if a certain condition is true, we may not want to proceed with the check. SVA offers a construct called "disable iff" which acts as an asynchronous reset for the checker.
+property p34;
+©(posedge clk)
+disable iff (reset)
+$rose(start) |=> a[=2] ##1 c[=5] ##1 !start;
+endproperty
+```
+
 **[🔼Back to Top](#table-of-contents)**
 
 #### reusability
@@ -273,4 +283,66 @@ endproperty
 
 //Handshaking protocols:
 
+```
+
+
+### Binding with Access to Internal Signal
+```systemverilog
+module counter(
+    input logic clk,
+    input logic rst_n,
+    input logic mode, // 0 for count down, 1 for count up
+    output logic [7:0] count_out
+);
+    logic [7:0] internal_count; // Internal signal to be monitored
+
+    // internal logic...
+
+endmodule
+```
+
+```systemverilog
+module counter_checker(
+    input logic clk,
+    input logic rst_n,
+    input logic [7:0] internal_count, // Accessing the internal signal
+    input logic mode
+);
+
+    // Check the count does not exceed the upper limit
+    property check_upper_limit;
+        @(posedge clk) mode && (internal_count == 8'hFF) |-> ##1 internal_count == 8'h00;
+    endproperty
+    assert_upper_limit: assert property(check_upper_limit);
+
+    // Check the count does not go below zero
+    property check_lower_limit;
+        @(posedge clk) !mode && (internal_count == 8'h00) |-> ##1 internal_count == 8'hFF;
+    endproperty
+    assert_lower_limit: assert property(check_lower_limit);
+
+endmodule
+```
+```systemverilog
+module top;
+    logic clk, rst_n, mode;
+    logic [7:0] count_out;
+
+    // Instantiating the Counter
+    counter my_counter(
+        .clk(clk),
+        .rst_n(rst_n),
+        .mode(mode),
+        .count_out(count_out)
+    );
+
+    // Binding the checker with access to the internal signal
+    bind counter counter_checker checker_instance(
+        .clk(clk),
+        .rst_n(rst_n),
+        .internal_count(my_counter.internal_count), // Direct access to internal signal
+        .mode(mode)
+    );
+
+endmodule
 ```
