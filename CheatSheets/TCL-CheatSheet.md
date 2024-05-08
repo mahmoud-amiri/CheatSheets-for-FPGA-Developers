@@ -33,7 +33,28 @@ created: 2022-10-01
       - [string first](#string-first)
       - [string index](#string-index)
       - [append](#append)
-      - [string match](#string-match-1)
+      - [string is](#string-is)
+    - [Array](#array)
+      - [Setting up an Array](#setting-up-an-array)
+      - [array size](#array-size)
+      - [array names](#array-names)
+      - [array get](#array-get)
+      - [array exists](#array-exists)
+      - [foreach with array names](#foreach-with-array-names)
+      - [parray](#parray)
+    - [Dictionary](#dictionary)
+      - [dict set](#dict-set)
+      - [dict set](#dict-set-1)
+      - [dict set](#dict-set-2)
+      - [dict set](#dict-set-3)
+      - [dict set](#dict-set-4)
+      - [dict set](#dict-set-5)
+      - [dict set](#dict-set-6)
+      - [dict set](#dict-set-7)
+      - [dict set](#dict-set-8)
+      - [dict set](#dict-set-9)
+      - [dict set](#dict-set-10)
+      - [dict set](#dict-set-11)
   - [Questasim TCL](#questasim-tcl)
     - [syntax](#syntax)
       - [vdel](#vdel)
@@ -315,12 +336,226 @@ puts $str  # Output: Hello, World
 
 ---
 
-#### string match
+#### string is
 
 ```tcl
 #Checks if the entire string conforms to a certain type.Checks if the entire string conforms to a certain type.
 puts [string is integer "1234"]  # Output: 1
 
+```
+
+---
+
+### Array 
+
+#### Setting up an Array
+
+```tcl
+#!
+array set array1 [list {123} {Abigail Aardvark} {234} {Bob Baboon} {345} {Cathy Coyote} {456} {Daniel Dog}]
+
+
+```
+
+---
+
+#### array size
+
+```tcl
+#Returns the number of elements (key-value pairs) in the array.
+puts [array size array1]  # Output: 4
+
+
+```
+
+---
+
+#### array names
+
+```tcl
+#Returns a list of all keys in the array, optionally matching a pattern.
+puts [array names array1]  # Outputs all keys in array1
+
+```
+
+---
+
+#### array get
+
+```tcl
+#Returns a list where each odd member is a key and the even member is its corresponding value.
+puts [array get array1]
+# Output might look like: 123 Abigail Aardvark 234 Bob Baboon 345 Cathy Coyote 456 Daniel Dog
+
+
+```
+
+---
+
+#### array exists
+
+```tcl
+#Checks if an array with the given name exists. Returns 1 if true, otherwise 0.
+puts [array exists array1]  # Output: 1
+
+```
+
+---
+
+#### foreach with array names
+
+```tcl
+#Iterates over each key of the array, and you can access values inside the loop.
+foreach key [array names array1] {
+   puts "Key is $key and value is $array1($key)"
+}
+
+
+```
+
+---
+
+#### parray
+
+```tcl
+#Prints the contents of an array in a readable form.
+parray array1
+
+
+```
+
+---
+
+### Dictionary 
+
+#### dict set
+
+```tcl
+#Creates or modifies entries in a dictionary.
+dict set myDict key1 "value1"
+dict set myDict key1 nestedKey1 "value2"
+puts $myDict
+```
+
+---
+
+#### dict set
+
+```tcl
+#Creates or modifies entries in a dictionary.
+dict set myDict key1 "value1"
+dict set myDict key1 nestedKey1 "value2"
+puts $myDict
+```
+
+---
+
+#### dict set
+
+```tcl
+#Creates or modifies entries in a dictionary.
+dict set myDict key1 "value1"
+dict set myDict key1 nestedKey1 "value2"
+puts $myDict
+```
+
+---
+
+#### dict set
+
+```tcl
+#Creates or modifies entries in a dictionary.
+dict set myDict key1 "value1"
+dict set myDict key1 nestedKey1 "value2"
+puts $myDict
+```
+
+---
+
+#### dict set
+
+```tcl
+#Creates or modifies entries in a dictionary.
+dict set myDict key1 "value1"
+dict set myDict key1 nestedKey1 "value2"
+puts $myDict
+```
+
+---
+
+#### dict set
+
+```tcl
+#Creates or modifies entries in a dictionary.
+dict set myDict key1 "value1"
+dict set myDict key1 nestedKey1 "value2"
+puts $myDict
+```
+
+---
+
+#### dict set
+
+```tcl
+#Creates or modifies entries in a dictionary.
+dict set myDict key1 "value1"
+dict set myDict key1 nestedKey1 "value2"
+puts $myDict
+```
+
+---
+
+#### dict set
+
+```tcl
+#Creates or modifies entries in a dictionary.
+dict set myDict key1 "value1"
+dict set myDict key1 nestedKey1 "value2"
+puts $myDict
+```
+
+---
+
+#### dict set
+
+```tcl
+#Creates or modifies entries in a dictionary.
+dict set myDict key1 "value1"
+dict set myDict key1 nestedKey1 "value2"
+puts $myDict
+```
+
+---
+
+#### dict set
+
+```tcl
+#Creates or modifies entries in a dictionary.
+dict set myDict key1 "value1"
+dict set myDict key1 nestedKey1 "value2"
+puts $myDict
+```
+
+---
+
+#### dict set
+
+```tcl
+#Creates or modifies entries in a dictionary.
+dict set myDict key1 "value1"
+dict set myDict key1 nestedKey1 "value2"
+puts $myDict
+```
+
+---
+
+#### dict set
+
+```tcl
+#Creates or modifies entries in a dictionary.
+dict set myDict key1 "value1"
+dict set myDict key1 nestedKey1 "value2"
+puts $myDict
 ```
 
 ---
