@@ -7,6 +7,33 @@ created: 2022-10-01
 ## Table of Contents
 
 - [TCL CheatSheet for FPGA Developers](#tcl-cheatsheet-for-fpga-developers)
+  - [General TCL syntax](#general-tcl-syntax)
+    - [List](#list)
+      - [lappend](#lappend)
+      - [lappend](#lappend-1)
+      - [concat](#concat)
+      - [llength](#llength)
+      - [lindex](#lindex)
+      - [lrange](#lrange)
+      - [linsert](#linsert)
+      - [lreplace](#lreplace)
+      - [lsearch](#lsearch)
+      - [lsort](#lsort)
+      - [split](#split)
+      - [join](#join)
+    - [string](#string)
+      - [string match](#string-match)
+      - [string equal](#string-equal)
+      - [string compare](#string-compare)
+      - [string map](#string-map)
+      - [string replace](#string-replace)
+      - [subst](#subst)
+      - [string range](#string-range)
+      - [string length](#string-length)
+      - [string first](#string-first)
+      - [string index](#string-index)
+      - [append](#append)
+      - [string match](#string-match-1)
   - [Questasim TCL](#questasim-tcl)
     - [syntax](#syntax)
       - [vdel](#vdel)
@@ -27,9 +54,276 @@ created: 2022-10-01
     - [example](#example)
       - [dut.f](#dutf)
       - [tb.f](#tbf)
-      - [wave.do](#wavedo)
+      - [run.do](#rundo)
 
 # TCL CheatSheet for FPGA Developers
+
+## General TCL syntax
+
+### List
+
+#### lappend
+
+```tcl
+#The lappend command is used to append elements to the end of a list. Each element you append becomes a single new element in the list.
+set mylist [list a b c]
+lappend mylist d
+# Now mylist is "a b c d"
+```
+
+---
+
+#### lappend
+
+```tcl
+# concat merges one or more lists or values into a single list. If you concatenate lists, set list1 [list a b c]
+set list2 [list d e f]
+set result [concat $list1 $list2]
+# result is "a b c d e f"
+```
+
+---
+
+#### concat
+
+```tcl
+#The lappend command is used to append elements to the end of a list. Each element you append becomes a single new element in the list.
+set mylist [list a b c]
+lappend mylist d
+# Now mylist is "a b c d"
+```
+
+---
+
+#### llength
+
+```tcl
+#This command returns the number of elements in a list.
+set mylist [list a b c d e]
+puts [llength $mylist]
+# Output: 5
+```
+
+---
+
+#### lindex
+
+```tcl
+#lindex is used to retrieve an element from a list based on its index. TCL lists are zero-indexed.
+set mylist [list a b c d e]
+puts [lindex $mylist 2]
+# Output: c
+```
+
+---
+
+#### lrange
+
+```tcl
+#This command returns a range of elements from a list, specified by start and end indexes.
+set mylist [list a b c d e]
+puts [lrange $mylist 1 3]
+# Output: b c d
+```
+
+---
+
+#### linsert
+
+```tcl
+#linsert inserts elements at a specified position in the list.
+set mylist [list a b c d]
+set mylist [linsert $mylist 2 x y z]
+# mylist is now "a b x y z c d"
+```
+
+---
+
+#### lreplace
+
+```tcl
+#This command replaces a range of elements in a list with new elements.
+
+set mylist [list a b c d e]
+set mylist [lreplace $mylist 1 3 x y]
+# mylist becomes "a x y e"
+```
+
+---
+
+#### lsearch
+
+```tcl
+#lsearch searches for an element in the list that matches a pattern and returns its index.
+
+set mylist [list apple banana grapefruit banana]
+puts [lsearch -exact $mylist banana]
+# Output: 1 (index of the first "banana")
+```
+
+---
+
+#### lsort
+
+```tcl
+#lsort sorts a list according to various sorting options like numeric or dictionary order.
+
+set mylist [list 10 2 30]
+puts [lsort -integer $mylist]
+# Output: 2 10 30
+```
+
+---
+
+#### split
+
+```tcl
+#Converts a string into a list, optionally splitting by specified delimiters.
+
+set mystring "a-b-c"
+puts [split $mystring "-"]
+# Output: a b c
+```
+
+---
+
+#### join
+
+```tcl
+#Converts a list into a string, optionally joining with a specified delimiter.
+
+set mylist [list a b c]
+puts [join $mylist "-"]
+# Output: a-b-c
+```
+
+---
+
+### string 
+
+#### string match
+
+```tcl
+#Checks if a pattern matches a string. Returns 1 if true, 0 if false.
+puts [string match "*lo" "Hello"]  # Output: 1
+
+```
+
+---
+
+#### string equal
+
+```tcl
+#Compares two strings for exact equality. Returns 1 if equal, 0 otherwise.
+puts [string equal -nocase "hello" "HELLO"]  # Output: 1
+
+```
+
+---
+
+#### string compare
+
+```tcl
+#Lexicographically compares two strings. Returns -1, 0, or 1.
+puts [string compare "abc" "abd"]  # Output: -1
+
+```
+
+---
+
+#### string map
+
+```tcl
+#Maps substrings of a string to new substrings.
+puts [string map {"H" "000"} "Hello"]  # Output: 000ello
+
+```
+
+---
+
+#### string replace
+
+```tcl
+#Replaces part of a string with another string.
+puts [string replace "Hello" 1 3 "a"]  # Output: Ha
+
+```
+
+---
+
+#### subst
+
+```tcl
+#Performs backslash, command, and variable substitutions.
+set a 44
+puts [subst "xyz {$a}"]  # Output: xyz {44}
+
+```
+
+---
+
+#### string range
+
+```tcl
+#Returns a substring based on start and end indexes.
+puts [string range "Hello, World" 7 11]  # Output: World
+
+```
+
+---
+
+
+#### string length
+
+```tcl
+#Returns the number of characters in a string.
+puts [string length "Hello"]  # Output: 5
+
+```
+
+---
+
+#### string first
+
+```tcl
+#Finds the first occurrence of a substring.
+puts [string first "e" "Hello"]  # Output: 1
+
+```
+
+---
+
+#### string index
+
+```tcl
+#Returns the character at a specific index.
+puts [string index "Hello" 4]  # Output: o
+
+```
+
+---
+
+#### append
+
+```tcl
+#Appends one or more values to a variable.
+set str "Hello"
+append str ", World"
+puts $str  # Output: Hello, World
+
+```
+
+---
+
+#### string match
+
+```tcl
+#Checks if the entire string conforms to a certain type.Checks if the entire string conforms to a certain type.
+puts [string is integer "1234"]  # Output: 1
+
+```
+
+---
 
 ## Questasim TCL
 
@@ -237,89 +531,41 @@ quit
 
 ---
 
-#### wave.do
-
-```tcl
-onerror {resume}
-quietly WaveActivateNextPane {} 0
-add wave -noupdate /top/clk
-add wave -noupdate -radix hexadecimal /top/DUT/A
-add wave -noupdate -radix hexadecimal /top/DUT/B
-add wave -noupdate -radix hexadecimal /top/DUT/clk
-add wave -noupdate -radix hexadecimal /top/op_set
-add wave -noupdate -radix hexadecimal /top/DUT/op
-add wave -noupdate -radix hexadecimal /top/DUT/reset_n
-add wave -noupdate -radix hexadecimal /top/DUT/start
-add wave -noupdate -radix hexadecimal /top/DUT/done
-add wave -noupdate -radix hexadecimal /top/DUT/result
-TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {50316229 ns} 0}
-quietly wave cursor active 1
-configure wave -namecolwidth 150
-configure wave -valuecolwidth 100
-configure wave -justifyvalue left
-configure wave -signalnamewidth 0
-configure wave -snapdistance 10
-configure wave -datasetprefix 0
-configure wave -rowmargin 4
-configure wave -childrowmargin 2
-configure wave -gridoffset 0
-configure wave -gridperiod 1
-configure wave -griddelta 40
-configure wave -timeline 0
-configure wave -timelineunits ns
-update
-WaveRestoreZoom {0 ns} {212795720 ns}
-```
+#### run.do
 
 ```tcl
 if [file exists "work"] {vdel -all}
 vlib work
 
-# Comment out either the SystemVerilog or VHDL DUT.
-# There can be only one!
-
-#VHDL DUT
 vcom -f dut.f
 
-# SystemVerilog DUT
-# vlog ../misc/tinyalu.sv
-
 vlog -f tb.f
+
 vopt top -o top_optimized  +acc +cover=sbfec+dut_top
 
-vsim top_optimized -coverage +UVM_TESTNAME=fibonacci_test
+#Test 1
+vsim top_optimized -coverage +UVM_TESTNAME=<test1-name>  #CHANGE_ME
 set NoQuitOnFinish 1
 onbreak {resume}
 log /* -r
 run -all
-coverage exclude -src tinyalu_dut/single_cycle_add_and_xor.vhd -line 49 -code s
-coverage exclude -src tinyalu_dut/single_cycle_add_and_xor.vhd -scope /top/DUT/add_and_xor -line 49 -code b
-coverage attribute -name TESTNAME -value fibonacci_test
-coverage save fibonacci_test.ucdb
+coverage exclude -src <file-addr>/<file-name>.vhd -line <n> -code s #CHANGE_ME
+coverage attribute -name TESTNAME -value <test1-name> #CHANGE_ME
+coverage save <test1-name>.ucdb #CHANGE_ME
 
-vsim top_optimized -coverage +UVM_TESTNAME=parallel_test 
+#Test 2
+vsim top_optimized -coverage +UVM_TESTNAME=<test2-name>  #CHANGE_ME
 set NoQuitOnFinish 1
 onbreak {resume}
 log /* -r
 run -all
-coverage exclude -src tinyalu_dut/single_cycle_add_and_xor.vhd -line 49 -code s
-coverage exclude -src tinyalu_dut/single_cycle_add_and_xor.vhd -scope /top/DUT/add_and_xor -line 49 -code b
-coverage attribute -name TESTNAME -value parallel_test
-coverage save parallel_test.ucdb
+coverage exclude -src <file-addr>/<file-name>.vhd -line <n> -code s #CHANGE_ME
+coverage attribute -name TESTNAME -value <test2-name> #CHANGE_ME
+coverage save <test2-name>.ucdb #CHANGE_ME
 
-vsim top_optimized -coverage +UVM_TESTNAME=full_test
-set NoQuitOnFinish 1
-onbreak {resume}
-log /* -r
-run -all
-coverage exclude -src tinyalu_dut/single_cycle_add_and_xor.vhd -line 49 -code s
-coverage exclude -src tinyalu_dut/single_cycle_add_and_xor.vhd -scope /top/DUT/add_and_xor -line 49 -code b
-coverage attribute -name TESTNAME -value full_test
-coverage save full_test.ucdb
 
-vcover merge  tinyalu.ucdb fibonacci_test.ucdb parallel_test.ucdb full_test.ucdb
-vcover report tinyalu.ucdb -cvg -details|
+vcover merge  <merged_tests_name>.ucdb <test1-name>.ucdb <test2-name>.ucdb #CHANGE_ME
+vcover report <merged_tests_name>.ucdb -cvg -details| #CHANGE_ME
 
 quit
 ```
