@@ -22,17 +22,6 @@ created: 2024-05-06
     - [reusability](#reusability)
     - [Property](#property)
     - [Assert](#assert)
-  - [OVL2 Library](#ovl2-library)
-    - [ovl\_always](#ovl_always)
-    - [ovl\_cycle\_sequence](#ovl_cycle_sequence)
-    - [ovl\_implication](#ovl_implication)
-    - [ovl\_never](#ovl_never)
-    - [ovl\_never\_unknown](#ovl_never_unknown)
-    - [ovl\_next](#ovl_next)
-    - [ovl\_one\_hot](#ovl_one_hot)
-    - [ovl\_range](#ovl_range)
-    - [ovl\_win\_unchange (Verilog-95, SVA-05, PSL-05, PSL-05)](#ovl_win_unchange-verilog-95-sva-05-psl-05-psl-05)
-    - [ovl\_always](#ovl_always-1)
     - [Binding with Access to Internal Signal](#binding-with-access-to-internal-signal)
 
 # Assertion CheatSheet for Developers
@@ -295,27 +284,7 @@ endproperty
 
 **[🔼Back to Top](#table-of-contents)**
 
-## OVL2 Library
 
-### ovl_always
-
-### ovl_cycle_sequence
-
-### ovl_implication
-
-### ovl_never
-
-### ovl_never_unknown
-
-### ovl_next
-
-### ovl_one_hot
-
-### ovl_range
-
-### ovl_win_unchange (Verilog-95, SVA-05, PSL-05, PSL-05)
-
-### ovl_zero_one_hot
 
 ```systemverilog
 // Registers and outputs at reset: 

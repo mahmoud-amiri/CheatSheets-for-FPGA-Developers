@@ -22,6 +22,7 @@ A Collection of programming CheatSheets for FPGA developers to quick review whil
 - [assertion-cheatsheet.md](./CheatSheets/assertion-cheatsheet.md)
 - [coverage-cheatsheet.md](./CheatSheets/coverage-cheatsheet.md)
 - [UVM-cheatsheet.md](./CheatSheets/UVM-cheatsheet.md)
+- [OVL-cheatsheet.md](./CheatSheets/OVL-cheatsheet.md)
 
 </details>
 
@@ -61,7 +62,7 @@ A Collection of programming CheatSheets for FPGA developers to quick review whil
 
 <summary>Libraries 📚</summary>
 
-- [OVL-cheatsheet.md](./CheatSheets/assertion-cheatsheet.md## OVL2 Library)
+- [OVL-cheatsheet.md](./CheatSheets/OVL-cheatsheet.md)
 - [UVM-cheatsheet.md](./CheatSheets/UVM-cheatsheet.md)
 - [conda-cheatsheet.md](./CheatSheets/conda-cheatsheet.md)
 - [pandas-cheatsheet.md](./CheatSheets/pandas-cheatsheet.md)
