@@ -73,8 +73,17 @@ created: 2022-10-01
       - [Opening and Closing Files](#opening-and-closing-files)
       - [Reading Files](#reading-files)
       - [Error Handling in File Operations](#error-handling-in-file-operations)
-  - [Questasim TCL](#questasim-tcl)
+  - [Vivado TCL](#vivado-tcl)
+    - [Create a new project](#create-a-new-project)
+      - [project\_config.txt](#project_configtxt)
+      - [build\_pl.tcl](#build_pltcl)
+      - [build\_ps.tcl](#build_pstcl)
+      - [save\_bd.tcl](#save_bdtcl)
+      - [gen\_bitstream.tcl](#gen_bitstreamtcl)
+      - [build\_mcs.tcl](#build_mcstcl)
     - [syntax](#syntax)
+  - [Questasim TCL](#questasim-tcl)
+    - [syntax](#syntax-1)
       - [vdel](#vdel)
       - [vlib](#vlib)
       - [vcom](#vcom)
@@ -729,6 +738,306 @@ if {[catch {set filehandle [open "nonexistentfile.txt" "r"]} err]} {
 }
 ```
 
+---
+
+## Vivado TCL
+
+### Create a new project
+
+#### project_config.txt
+
+```tcl
+PROJECT_NAME=crop_vid_prj
+PROJECT_LOCATION=./vivado
+PART_NUMBER=xc7z020clg400-1
+TOP_MODULE=hdmi_out_wrapper
+CORE_CNT=8
+PROCESSOR_NAME=ps7_cortexa9_0
+```
+
+#### build_pl.tcl
+
+```tcl
+# Read Project Configuration
+set configFile [open "project_config.txt" r]
+set projectName ""
+set projectLocation ""
+set partNumber ""
+
+while {[gets $configFile line] >= 0} {
+    if {[string match "PROJECT_NAME=*" $line]} {
+        set projectName [string trim [string range $line 13 end]]
+    } elseif {[string match "PROJECT_LOCATION=*" $line]} {
+        set projectLocation [string trim [string range $line 18 end]]
+    } elseif {[string match "PART_NUMBER=*" $line]} {
+        set partNumber [string trim [string range $line 12 end]]
+    }
+}
+close $configFile
+
+# Convert relative project location to absolute if necessary
+set absProjectLocation [file normalize $projectLocation]
+
+# Check if the project directory exists and delete it if it does
+if {[file exists $absProjectLocation]} {
+    file delete -force $absProjectLocation
+}
+
+# Create and configure the project
+create_project $projectName $absProjectLocation -part $partNumber
+
+
+# Add HDL Design Sources (both VHDL and Verilog)
+set hdlFiles [glob -nocomplain ./hdl/*.{v,vhd,vhdl}]
+foreach hdlFile $hdlFiles {
+    add_files -norecurse $hdlFile
+    # Determine file type based on extension and set it
+    if {[string match "*.vhd" $hdlFile] || [string match "*.vhdl" $hdlFile]} {
+        set_property FILE_TYPE {VHDL 2008} [get_files $hdlFile] ;# Adjust VHDL version if necessary
+    } elseif {[string match "*.v" $hdlFile]} {
+        set_property FILE_TYPE {Verilog} [get_files $hdlFile]
+    }
+}
+
+# Add Simulation Sources
+foreach simFile [glob -nocomplain ./sim/*] {
+    add_files -fileset sim_1 -norecurse $simFile
+}
+
+# Add Constraints
+foreach xdcFile [glob -nocomplain ./cons/*.xdc] {
+    add_files -fileset constrs_1 -norecurse $xdcFile
+}
+
+# Add XCI files from xil_ip
+foreach xciFile [glob -nocomplain .xil_ip/*.xci] {
+    add_files -norecurse $xciFile
+    set_property IP_REPO_PATHS $absProjectLocation/xil_ip [current_project]
+}
+
+# Add XCI files from user_ip
+foreach xciFile [glob -nocomplain ./user_ip/*.xci] {
+    add_files -norecurse $xciFile
+    set_property IP_REPO_PATHS $absProjectLocation/user_ip [current_project]
+}
+
+
+# Define the path to the bd directory relative to this script's location
+set bdPath [file normalize "./bd"]
+
+# Check if the bd directory exists
+if {[file exists $bdPath]} {
+    # List all TCL files in the bd directory
+    foreach bdTclFile [glob -nocomplain $bdPath/*.tcl] {
+        # Extract the base name for the block design from the file name
+        set bdName [file tail [file rootname $bdTclFile]]
+        
+        # Source the TCL file to recreate the block design
+        puts "Sourcing BD TCL script for: $bdName"
+        source $bdTclFile
+        
+        # Optional: Save the project after each BD is recreated
+        save_project
+    }
+} else {
+    puts "The bd directory does not exist at $bdPath"
+}
+
+
+# Save and close the project
+#save_project
+close_project 
+```
+
+#### build_ps.tcl
+
+```tcl
+# Read Project Configuration
+set configFile [open "project_config.txt" r]
+set projectName ""
+set projectLocation ""
+set partNumber ""
+set topModuleName ""
+set cpuCoreCount ""
+set proc_name ""
+
+
+while {[gets $configFile line] >= 0} {
+    if {[string match "PROJECT_NAME=*" $line]} {
+        set projectName [string trim [string range $line 13 end]]
+    } elseif {[string match "PROJECT_LOCATION=*" $line]} {
+        set projectLocation [string trim [string range $line 17 end]]
+    } elseif {[string match "PART_NUMBER=*" $line]} {
+        set partNumber [string trim [string range $line 12 end]]
+    } elseif {[string match "TOP_MODULE=*" $line]} {
+        set topModuleName [string trim [string range $line 11 end]]
+    } elseif {[string match "CORE_CNT=*" $line]} {
+        set cpuCoreCount [string trim [string range $line 9 end]]
+    } elseif {[string match "PROCESSOR_NAME=*" $line]} {
+        set proc_name [string trim [string range $line 15 end]]
+    }
+}
+close $configFile
+
+
+
+setws ./vitis
+app create -name ${projectName} -hw ./vivado/${topModuleName}.xsa -proc ${proc_name} -os standalone -lang C++ -template "Empty Application"
+importsources -name ${projectName} -path ./sdk/ -linker-script
+app build -all
+```
+
+#### save_bd.tcl
+
+```tcl
+# Adjusted script to export all block designs in a Vivado project to TCL files,
+# with specific paths for the project and output TCL files.
+
+# Define the output directory for the generated TCL files
+set output_dir "./bd"
+
+# Ensure the output directory exists, create if it doesn't
+if {![file exists $output_dir]} {
+    file mkdir $output_dir
+}
+
+# Change the current directory to the project directory to ensure paths are resolved correctly
+#cd ./vivado
+
+# Get a list of all block designs in the project
+set bd_names  [get_bd_designs]
+
+# Check if there are any block designs to export
+if {[llength $bd_names] == 0} {
+    puts "No block designs found in the project."
+    return
+}
+# Iterate through each block design
+foreach bd $block_designs {
+    # Construct the output file name based on the block design name
+    set output_file [file join $output_dir [get_property NAME $bd].tcl]
+    
+    # Export the block design to a TCL file
+    puts "Exporting block design [get_property NAME $bd] to $output_file"
+    write_bd_tcl -bd_name $bd -force $output_file
+}
+puts "Finished exporting all block designs to TCL files."
+```
+
+#### gen_bitstream.tcl
+
+```tcl
+# Read Project Configuration
+set configFile [open "project_config.txt" r]
+set projectName ""
+set projectLocation ""
+set partNumber ""
+set topModuleName ""
+set cpuCoreCount ""
+
+while {[gets $configFile line] >= 0} {
+    if {[string match "PROJECT_NAME=*" $line]} {
+        set projectName [string trim [string range $line 13 end]]
+    } elseif {[string match "PROJECT_LOCATION=*" $line]} {
+        set projectLocation [string trim [string range $line 17 end]]
+    } elseif {[string match "PART_NUMBER=*" $line]} {
+        set partNumber [string trim [string range $line 12 end]]
+    } elseif {[string match "TOP_MODULE=*" $line]} {
+        set topModuleName [string trim [string range $line 11 end]]
+    } elseif {[string match "CORE_CNT=*" $line]} {
+        set cpuCoreCount [string trim [string range $line 9 end]]
+    }
+}
+close $configFile
+
+set project_folder Vivado
+
+set origin_dir [file dirname [file dirname [info script]]]
+cd ${origin_dir}
+
+open_project ./${project_folder}/${projectName}.xpr
+
+update_compile_order -fileset sources_1
+
+reset_project
+
+launch_runs synth_1 -jobs $cpuCoreCount
+wait_on_run synth_1
+
+launch_runs impl_1 -to_step write_bitstream -jobs $cpuCoreCount
+wait_on_run impl_1
+
+write_hw_platform -fixed -include_bit -force -file ./${project_folder}/${topModuleName}.xsa
+
+exit
+```
+
+#### build_mcs.tcl
+
+```tcl
+# Read Project Configuration
+set configFile [open "project_config.txt" r]
+set projectName ""
+set projectLocation ""
+set partNumber ""
+set topModuleName ""
+set cpuCoreCount ""
+set proc_name ""
+
+
+while {[gets $configFile line] >= 0} {
+    if {[string match "PROJECT_NAME=*" $line]} {
+        set projectName [string trim [string range $line 13 end]]
+    } elseif {[string match "PROJECT_LOCATION=*" $line]} {
+        set projectLocation [string trim [string range $line 17 end]]
+    } elseif {[string match "PART_NUMBER=*" $line]} {
+        set partNumber [string trim [string range $line 12 end]]
+    } elseif {[string match "TOP_MODULE=*" $line]} {
+        set topModuleName [string trim [string range $line 11 end]]
+    } elseif {[string match "CORE_CNT=*" $line]} {
+        set cpuCoreCount [string trim [string range $line 9 end]]
+    } elseif {[string match "PROCESSOR_NAME=*" $line]} {
+        set proc_name [string trim [string range $line 15 end]]
+    }
+}
+close $configFile
+
+set mcs_name final_output
+set mcs_dir "."
+
+set bin_dir "./vivado/${projectName}.runs/impl_1/${topModuleName}.bin"
+set bit_dir "./vivado/${projectName}.runs/impl_1/${topModuleName}.bit"
+set ltx_dir "./vivado/${projectName}.runs/impl_1/${topModuleName}.ltx"
+
+# Get the current time
+set current_time [clock seconds]
+
+# Format the time as MMDDYY_HHMM
+set formatted_time [clock format $current_time -format {%m%d%y_%H%M}]
+
+# Create a filename with the formatted time
+set filename "my_file_${formatted_time}.txt"
+
+# Example usage: creating a file with the generated name
+set file [open $filename "w"]
+puts $file "This file was created on $formatted_time."
+close $file
+
+# Output the filename to the console
+puts "File created: $filename"
+
+
+file copy -force ${bit_dir} ./output/out_${formatted_time}.bit
+file copy -force ${ltx_dir} ./output/out_${formatted_time}.ltx
+file copy -force ${bin_dir} ./output/out_${formatted_time}.bin
+write_cfgmem  -format mcs -size 32 -interface SPIx4 -loadbit {up 0x00000000 ./output/out_${formatted_time}.bit } -force -file ./output/out_${formatted_time}.mcs
+
+exit
+```
+
+---
+
+### syntax
 ---
 
 ## Questasim TCL
