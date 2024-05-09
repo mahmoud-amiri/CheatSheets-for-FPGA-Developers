@@ -60,6 +60,9 @@ created: 2022-10-01
       - [while](#while)
       - [for](#for)
       - [foreach](#foreach)
+    - [conditional statements](#conditional-statements)
+      - [if](#if)
+      - [switch](#switch)
   - [Questasim TCL](#questasim-tcl)
     - [syntax](#syntax)
       - [vdel](#vdel)
@@ -612,6 +615,61 @@ foreach ele1 $list1 ele2 $list2 {
 
 ---
 
+### conditional statements
+
+#### if
+
+```tcl
+#The if statement evaluates a condition, and if that condition is true, the specified block of code is executed.
+set age 20
+if {$age >= 18} {
+    puts "You are eligible to vote."
+}
+
+#You can extend an if statement with an else block to handle the false case of the condition.
+set score 75
+if {$score >= 50} {
+    puts "Passed"
+} else {
+    puts "Failed"
+}
+
+#You can use elseif to specify additional conditions if the initial if condition is false. You can chain as many elseif statements as needed.
+set marks 85
+if {$marks >= 90} {
+    puts "Grade: A"
+} elseif {$marks >= 80} {
+    puts "Grade: B"
+} elseif {$marks >= 70} {
+    puts "Grade: C"
+} else {
+    puts "Grade: F"
+}
+```
+
+---
+
+#### switch
+
+```tcl
+#The switch statement matches a variable against several values and executes a block of code corresponding to the first matching value. 
+set color "red"
+switch $color {
+    "red" {
+        puts "The color is red."
+    }
+    "blue" {
+        puts "The color is blue."
+    }
+    default {
+        puts "Unknown color."
+    }
+}
+```
+
+---
+
+---
 
 ## Questasim TCL
 
