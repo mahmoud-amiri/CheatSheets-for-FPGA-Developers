@@ -90,9 +90,10 @@ created: 2022-10-01
       - [vcover merge](#vcover-merge)
       - [vcover report](#vcover-report)
       - [quit](#quit)
-    - [example](#example)
+    - [verification example](#verification-example)
       - [dut.f](#dutf)
       - [tb.f](#tbf)
+      - [test\_config.tcl](#test_configtcl)
       - [run.do](#rundo)
 
 # TCL CheatSheet for FPGA Developers
@@ -110,8 +111,6 @@ lappend mylist d
 # Now mylist is "a b c d"
 ```
 
----
-
 #### lappend
 
 ```tcl
@@ -120,8 +119,6 @@ set list2 [list d e f]
 set result [concat $list1 $list2]
 # result is "a b c d e f"
 ```
-
----
 
 #### concat
 
@@ -132,8 +129,6 @@ lappend mylist d
 # Now mylist is "a b c d"
 ```
 
----
-
 #### llength
 
 ```tcl
@@ -142,8 +137,6 @@ set mylist [list a b c d e]
 puts [llength $mylist]
 # Output: 5
 ```
-
----
 
 #### lindex
 
@@ -154,8 +147,6 @@ puts [lindex $mylist 2]
 # Output: c
 ```
 
----
-
 #### lrange
 
 ```tcl
@@ -165,8 +156,6 @@ puts [lrange $mylist 1 3]
 # Output: b c d
 ```
 
----
-
 #### linsert
 
 ```tcl
@@ -175,8 +164,6 @@ set mylist [list a b c d]
 set mylist [linsert $mylist 2 x y z]
 # mylist is now "a b x y z c d"
 ```
-
----
 
 #### lreplace
 
@@ -188,8 +175,6 @@ set mylist [lreplace $mylist 1 3 x y]
 # mylist becomes "a x y e"
 ```
 
----
-
 #### lsearch
 
 ```tcl
@@ -199,8 +184,6 @@ set mylist [list apple banana grapefruit banana]
 puts [lsearch -exact $mylist banana]
 # Output: 1 (index of the first "banana")
 ```
-
----
 
 #### lsort
 
@@ -212,8 +195,6 @@ puts [lsort -integer $mylist]
 # Output: 2 10 30
 ```
 
----
-
 #### split
 
 ```tcl
@@ -223,8 +204,6 @@ set mystring "a-b-c"
 puts [split $mystring "-"]
 # Output: a b c
 ```
-
----
 
 #### join
 
@@ -248,8 +227,6 @@ puts [string match "*lo" "Hello"]  # Output: 1
 
 ```
 
----
-
 #### string equal
 
 ```tcl
@@ -257,8 +234,6 @@ puts [string match "*lo" "Hello"]  # Output: 1
 puts [string equal -nocase "hello" "HELLO"]  # Output: 1
 
 ```
-
----
 
 #### string compare
 
@@ -268,8 +243,6 @@ puts [string compare "abc" "abd"]  # Output: -1
 
 ```
 
----
-
 #### string map
 
 ```tcl
@@ -278,8 +251,6 @@ puts [string map {"H" "000"} "Hello"]  # Output: 000ello
 
 ```
 
----
-
 #### string replace
 
 ```tcl
@@ -287,8 +258,6 @@ puts [string map {"H" "000"} "Hello"]  # Output: 000ello
 puts [string replace "Hello" 1 3 "a"]  # Output: Ha
 
 ```
-
----
 
 #### subst
 
@@ -299,8 +268,6 @@ puts [subst "xyz {$a}"]  # Output: xyz {44}
 
 ```
 
----
-
 #### string range
 
 ```tcl
@@ -308,9 +275,6 @@ puts [subst "xyz {$a}"]  # Output: xyz {44}
 puts [string range "Hello, World" 7 11]  # Output: World
 
 ```
-
----
-
 
 #### string length
 
@@ -320,8 +284,6 @@ puts [string length "Hello"]  # Output: 5
 
 ```
 
----
-
 #### string first
 
 ```tcl
@@ -330,8 +292,6 @@ puts [string first "e" "Hello"]  # Output: 1
 
 ```
 
----
-
 #### string index
 
 ```tcl
@@ -339,8 +299,6 @@ puts [string first "e" "Hello"]  # Output: 1
 puts [string index "Hello" 4]  # Output: o
 
 ```
-
----
 
 #### append
 
@@ -351,8 +309,6 @@ append str ", World"
 puts $str  # Output: Hello, World
 
 ```
-
----
 
 #### string is
 
@@ -375,8 +331,6 @@ array set array1 [list {123} {Abigail Aardvark} {234} {Bob Baboon} {345} {Cathy 
 
 ```
 
----
-
 #### array size
 
 ```tcl
@@ -386,8 +340,6 @@ puts [array size array1]  # Output: 4
 
 ```
 
----
-
 #### array names
 
 ```tcl
@@ -395,8 +347,6 @@ puts [array size array1]  # Output: 4
 puts [array names array1]  # Outputs all keys in array1
 
 ```
-
----
 
 #### array get
 
@@ -408,8 +358,6 @@ puts [array get array1]
 
 ```
 
----
-
 #### array exists
 
 ```tcl
@@ -417,8 +365,6 @@ puts [array get array1]
 puts [array exists array1]  # Output: 1
 
 ```
-
----
 
 #### foreach with array names
 
@@ -431,8 +377,6 @@ foreach key [array names array1] {
 
 ```
 
----
-
 #### parray
 
 ```tcl
@@ -444,7 +388,7 @@ parray array1
 
 ---
 
-### Dictionary 
+### Dictionary
 
 #### dict set
 
@@ -455,16 +399,12 @@ dict set myDict key1 nestedKey1 "value2"
 puts $myDict
 ```
 
----
-
 #### dict create
 
 ```tcl
 #Creates a new dictionary with specified key-value pairs.
 set myDict [dict create 1 "SK" 2 "KK" 3 "ZK"]
 ```
-
----
 
 #### dict unset
 
@@ -473,16 +413,12 @@ set myDict [dict create 1 "SK" 2 "KK" 3 "ZK"]
 dict unset myDict key1
 ```
 
----
-
 #### dict replace
 
 ```tcl
 #Replaces the value for a given key in the dictionary.
 dict replace myDict key1 "new value"
 ```
-
----
 
 #### dict keys and dict values
 
@@ -492,8 +428,6 @@ puts [dict keys myDict]
 puts [dict values myDict]
 ```
 
----
-
 #### dict get
 
 ```tcl
@@ -501,8 +435,6 @@ puts [dict values myDict]
 puts [dict get myDict key1]
 puts [dict get myDict]
 ```
-
----
 
 #### dict for
 
@@ -513,8 +445,6 @@ dict for {key value} $myDict {
 }
 ```
 
----
-
 #### foreach with dict keys
 
 ```tcl
@@ -524,8 +454,6 @@ foreach key [dict keys $myDict] {
 }
 ```
 
----
-
 #### dict append and dict lappend
 
 ```tcl
@@ -534,16 +462,12 @@ dict append myDict 4 "LA"
 dict lappend myDict 4 "SF" "PO"
 ```
 
----
-
 #### dict exists
 
 ```tcl
 #Checks if a key exists in the dictionary.
 puts [dict exists $myDict key1]
 ```
-
----
 
 #### dict merge
 
@@ -554,16 +478,12 @@ set dict2 [dict create c 3 d 4]
 set merged [dict merge $dict1 $dict2]
 ```
 
----
-
 #### dict remove
 
 ```tcl
 #Removes one or more keys from the dictionary.
 set newDict [dict remove $myDict key1 key2]
 ```
-
----
 
 #### dict size
 
@@ -587,8 +507,6 @@ while {$count > 0} {
 }
 ```
 
----
-
 #### for
 
 ```tcl
@@ -597,8 +515,6 @@ for {set i 10} {$i >= 0} {incr i -1} {
     puts "i is $i"
 }
 ```
-
----
 
 #### foreach
 
@@ -657,8 +573,6 @@ if {$marks >= 90} {
 }
 ```
 
----
-
 #### switch
 
 ```tcl
@@ -696,8 +610,6 @@ puts [random_num 10]      ;# Will generate a number between 10 and 100
 puts [random_num 10 50]   ;# Will generate a number between 10 and 50
 ```
 
----
-
 #### Proc with Variable Number of Arguments
 
 ```tcl
@@ -715,8 +627,6 @@ process_args 1 2 3 4 5  ;# Processes five arguments
 process_args "hello" "world" ;# Processes two arguments
 ```
 
----
-
 #### Returning Values
 
 ```tcl
@@ -726,8 +636,6 @@ proc sum {a b} {
 }
 puts [sum 5 3]  ;# Output will be 8
 ```
-
----
 
 #### Local Variables
 
@@ -740,8 +648,6 @@ proc demo_local_vars {} {
 demo_local_vars
 # puts $local_var  ;# This would raise an error because local_var is not accessible outside the proc.
 ```
-
----
 
 #### Error Handling in Procs
 
@@ -784,8 +690,6 @@ puts $filehandle "This is a test."
 close $filehandle
 ```
 
----
-
 #### Reading Files
 
 ```tcl
@@ -816,8 +720,6 @@ proc read_file {file_in} {
     }
 }
 ```
-
----
 
 #### Error Handling in File Operations
 
@@ -1008,9 +910,9 @@ vcover report <merged-file>.ucdb -cvg -details|
 quit
 ```
 
-### example
+### verification example
 
-#### dut.f 
+#### dut.f
 
 ```tcl
 <file1>.vhd
@@ -1035,43 +937,74 @@ quit
 
 ---
 
+#### test_config.tcl
+
+```tcl
+# Define all tests in a dictionary
+set tests {
+    test1-name {
+        {file_addr "/path/to/src1"}
+        {file_name "file1"}
+        {line_number 123}
+        {description "Test 1 - Checking basic functionality"}
+    }
+    test2-name {
+        {file_addr "/path/to/src2"}
+        {file_name "file2"}
+        {line_number 456}
+        {description "Test 2 - Edge case handling"}
+    }
+}
+return $tests
+```
+
 #### run.do
 
 ```tcl
-if [file exists "work"] {vdel -all}
+# Check and delete the existing work library if it exists
+if {[file exists "work"]} {
+    vdel -all
+}
 vlib work
 
+# Compile the Design Under Test (DUT) and Testbench (TB)
 vcom -f dut.f
-
 vlog -f tb.f
 
-vopt top -o top_optimized  +acc +cover=sbfec+dut_top
+# Optimize the top module
+vopt top -o top_optimized +acc +cover=sbfec+dut_top
 
-#Test 1
-vsim top_optimized -coverage +UVM_TESTNAME=<test1-name>  #CHANGE_ME
-set NoQuitOnFinish 1
-onbreak {resume}
-log /* -r
-run -all
-coverage exclude -src <file-addr>/<file-name>.vhd -line <n> -code s #CHANGE_ME
-coverage attribute -name TESTNAME -value <test1-name> #CHANGE_ME
-coverage save <test1-name>.ucdb #CHANGE_ME
+# Load test configurations from an external file
+set tests [source test_config.tcl]
 
-#Test 2
-vsim top_optimized -coverage +UVM_TESTNAME=<test2-name>  #CHANGE_ME
-set NoQuitOnFinish 1
-onbreak {resume}
-log /* -r
-run -all
-coverage exclude -src <file-addr>/<file-name>.vhd -line <n> -code s #CHANGE_ME
-coverage attribute -name TESTNAME -value <test2-name> #CHANGE_ME
-coverage save <test2-name>.ucdb #CHANGE_ME
+# Procedure to run a test with coverage, logging, and result saving
+proc run_test {test_name file_addr file_name line_number description} {
+    puts "Running test: $test_name - $description"
+    vsim top_optimized -coverage +UVM_TESTNAME=$test_name
+    set NoQuitOnFinish 1
+    onbreak {resume}
+    log /* -r
+    run -all
+    coverage exclude -src $file_addr/$file_name.vhd -line $line_number -code s
+    coverage attribute -name TESTNAME -value $test_name
+    coverage save $test_name.ucdb
+}
 
+# Iterate over the dictionary and run each test
+foreach {test_name test_config} $tests {
+    dict with $test_config {
+        run_test $test_name $file_addr $file_name $line_number $description
+    }
+}
 
-vcover merge  <merged_tests_name>.ucdb <test1-name>.ucdb <test2-name>.ucdb #CHANGE_ME
-vcover report <merged_tests_name>.ucdb -cvg -details| #CHANGE_ME
+# Merge coverage data and generate a report
+set merged_tests_name "all_tests_merged"
+vcover merge $merged_tests_name.ucdb {*}[dict keys [dict map {key val} $tests {set val $key.ucdb}]]
+vcover report $merged_tests_name.ucdb -cvg -details
 
+# Exit QuestaSim
 quit
+
 ```
 
 **[🔼Back to Top](#table-of-contents)**
