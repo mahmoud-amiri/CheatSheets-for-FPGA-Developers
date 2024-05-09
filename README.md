@@ -2,29 +2,36 @@
 
 A Collection of programming CheatSheets for FPGA developers to quick review while working.
 
-## ___CheatSheets Table Views___
-
-<div align="center">
-
-| __[git-cheatsheet.md](./CheatSheets/git-cheatsheet.md)__ | __[markdown-cheatsheet.md](./CheatSheets/markdown-cheatsheet.md)__ | __[windows-cheatsheet.md](./CheatSheets/windows-cheatsheet.md)__ |
-| :-------: | :-------: | :-------: |
-| __[cmd-cheatsheet.md](./CheatSheets/cmd-cheatsheet.md)__ | __[linux-cheatsheet.md](./CheatSheets/linux-cheatsheet.md)__ | __[bash-cheatsheet.md](./CheatSheets/bash_cheatsheet.md)__ |
-| __[vscode-cheatsheet.md](./CheatSheets/vscode-cheatsheet.md)__ | __[vim-editor-cheatsheet.md](./CheatSheets/vim-editor-cheatsheet.md)__
-| __[python-cheatsheet.md](./CheatSheets/Python-cheatsheet.md)__ | __[cpp-stl-cheatsheet.md](./CheatSheets/cpp-stl-cheatsheet.md)__ | 
-| __[docker-cheatsheet.md](./CheatSheets/docker-cheatsheet.md)__ | __[regex-cheatsheet.md](./CheatSheets/regex-cheatsheet.md)__ |
- | __[pandas-cheatsheet.md](./CheatSheets/pandas-cheatsheet.md)__ | __[numpy-cheatsheet.md](./CheatSheets/Numpy-cheatsheet.md)__ |
- | __[sklearn-cheatsheet.md](./CheatSheets/sklearn-cheatsheet.md)__ |  |
-
-</div>
 
 ## ___CheatSheets List___
 
 <details>
-<summary>Languages 📄</summary>
+<summary>programming Languages 📄</summary>
 
-- [bash-cheatsheet.md](./CheatSheets/bash_cheatsheet.md)
+- [VHDL-cheatsheet.md](./CheatSheets/VHDL-cheatsheet.md)
+- [verilog-cheatsheet.md](./CheatSheets/verilog-cheatsheet.md)
+- [system-verilog-cheatsheet.md](./CheatSheets/system-verilog-cheatsheet.md)
 - [python-cheatsheet.md](./CheatSheets/Python-cheatsheet.md)
 - [cpp-stl-cheatsheet.md](./CheatSheets/cpp-stl-cheatsheet.md)
+
+</details>
+
+<details>
+<summary>verification 📄</summary>
+
+- [assertion-cheatsheet.md](./CheatSheets/assertion_cheatsheet.md)
+- [coverage-cheatsheet.md](./CheatSheets/coverage_cheatsheet.md)
+- [UVM-cheatsheet.md](./CheatSheets/UVM_cheatsheet.md)
+
+</details>
+<details>
+
+<details>
+<summary>script 📄</summary>
+
+- [bash-cheatsheet.md](./CheatSheets/bash_cheatsheet.md)
+- [Matlab-cheatsheet.md](./CheatSheets/Matlab_cheatsheet.md)
+- [TCL-cheatsheet.md](./CheatSheets/TCL_cheatsheet.md)
 
 </details>
 
@@ -32,17 +39,9 @@ A Collection of programming CheatSheets for FPGA developers to quick review whil
 <summary>Operating Systems 🖥️</summary>
 
 - [windows-cheatsheet.md](./CheatSheets/windows-cheatsheet.md)
-- [cmd-cheatsheet.md](./CheatSheets/cmd-cheatsheet.md)
 - [linux-cheatsheet.md](./CheatSheets/linux-cheatsheet.md)
+  
 </details>
-
-<details>
-<summary>Frontend 🌐</summary>
-
-- [markdown-cheatsheet.md](./CheatSheets/markdown-cheatsheet.md)
-
-</details>
-
 
 
 <details>
@@ -79,6 +78,8 @@ A Collection of programming CheatSheets for FPGA developers to quick review whil
 <summary>Other 💡</summary>
   
 - [regex-cheatsheet.md](./CheatSheets/regex-cheatsheet.md)
+- [markdown-cheatsheet.md](./CheatSheets/markdown-cheatsheet.md)
+- [cmd-cheatsheet.md](./CheatSheets/cmd-cheatsheet.md)
 </details>
 
 ## ___Instructions___
