@@ -44,17 +44,18 @@ created: 2022-10-01
       - [parray](#parray)
     - [Dictionary](#dictionary)
       - [dict set](#dict-set)
-      - [dict set](#dict-set-1)
-      - [dict set](#dict-set-2)
-      - [dict set](#dict-set-3)
-      - [dict set](#dict-set-4)
-      - [dict set](#dict-set-5)
-      - [dict set](#dict-set-6)
-      - [dict set](#dict-set-7)
-      - [dict set](#dict-set-8)
-      - [dict set](#dict-set-9)
-      - [dict set](#dict-set-10)
-      - [dict set](#dict-set-11)
+      - [dict create](#dict-create)
+      - [dict unset](#dict-unset)
+      - [dict replace](#dict-replace)
+      - [dict keys and dict values](#dict-keys-and-dict-values)
+      - [dict get](#dict-get)
+      - [dict for](#dict-for)
+      - [foreach with dict keys](#foreach-with-dict-keys)
+      - [dict append and dict lappend](#dict-append-and-dict-lappend)
+      - [dict exists](#dict-exists)
+      - [dict merge](#dict-merge)
+      - [dict remove](#dict-remove)
+      - [dict size](#dict-size)
   - [Questasim TCL](#questasim-tcl)
     - [syntax](#syntax)
       - [vdel](#vdel)
@@ -439,124 +440,122 @@ puts $myDict
 
 ---
 
-#### dict set
+#### dict create
 
 ```tcl
-#Creates or modifies entries in a dictionary.
-dict set myDict key1 "value1"
-dict set myDict key1 nestedKey1 "value2"
-puts $myDict
+#Creates a new dictionary with specified key-value pairs.
+set myDict [dict create 1 "SK" 2 "KK" 3 "ZK"]
 ```
 
 ---
 
-#### dict set
+#### dict unset
 
 ```tcl
-#Creates or modifies entries in a dictionary.
-dict set myDict key1 "value1"
-dict set myDict key1 nestedKey1 "value2"
-puts $myDict
+#Removes a key (and its corresponding value) from a dictionary.
+dict unset myDict key1
 ```
 
 ---
 
-#### dict set
+#### dict replace
 
 ```tcl
-#Creates or modifies entries in a dictionary.
-dict set myDict key1 "value1"
-dict set myDict key1 nestedKey1 "value2"
-puts $myDict
+#Replaces the value for a given key in the dictionary.
+dict replace myDict key1 "new value"
 ```
 
 ---
 
-#### dict set
+#### dict keys and dict values
 
 ```tcl
-#Creates or modifies entries in a dictionary.
-dict set myDict key1 "value1"
-dict set myDict key1 nestedKey1 "value2"
-puts $myDict
+#These commands list all keys or values in the dictionary.
+puts [dict keys myDict]
+puts [dict values myDict]
 ```
 
 ---
 
-#### dict set
+#### dict get
 
 ```tcl
-#Creates or modifies entries in a dictionary.
-dict set myDict key1 "value1"
-dict set myDict key1 nestedKey1 "value2"
-puts $myDict
+#Retrieves the value for a specific key or the entire dictionary as a list.
+puts [dict get myDict key1]
+puts [dict get myDict]
 ```
 
 ---
 
-#### dict set
+#### dict for
 
 ```tcl
-#Creates or modifies entries in a dictionary.
-dict set myDict key1 "value1"
-dict set myDict key1 nestedKey1 "value2"
-puts $myDict
+#Iterates over each key-value pair in the dictionary.
+dict for {key value} $myDict {
+    puts "Key: $key Value: $value"
+}
 ```
 
 ---
 
-#### dict set
+#### foreach with dict keys
 
 ```tcl
-#Creates or modifies entries in a dictionary.
-dict set myDict key1 "value1"
-dict set myDict key1 nestedKey1 "value2"
-puts $myDict
+#Another way to iterate using the keys.
+foreach key [dict keys $myDict] {
+    puts "Key: $key Value: [dict get $myDict $key]"
+}
 ```
 
 ---
 
-#### dict set
+#### dict append and dict lappend
 
 ```tcl
-#Creates or modifies entries in a dictionary.
-dict set myDict key1 "value1"
-dict set myDict key1 nestedKey1 "value2"
-puts $myDict
+#These commands append values to an existing key, where dict lappend treats all added elements as a single list item under the key.
+dict append myDict 4 "LA"
+dict lappend myDict 4 "SF" "PO"
 ```
 
 ---
 
-#### dict set
+#### dict exists
 
 ```tcl
-#Creates or modifies entries in a dictionary.
-dict set myDict key1 "value1"
-dict set myDict key1 nestedKey1 "value2"
-puts $myDict
+#Checks if a key exists in the dictionary.
+puts [dict exists $myDict key1]
 ```
 
 ---
 
-#### dict set
+#### dict merge
 
 ```tcl
-#Creates or modifies entries in a dictionary.
-dict set myDict key1 "value1"
-dict set myDict key1 nestedKey1 "value2"
-puts $myDict
+#Merges two dictionaries into one.
+set dict1 [dict create a 1 b 2]
+set dict2 [dict create c 3 d 4]
+set merged [dict merge $dict1 $dict2]
 ```
 
 ---
 
-#### dict set
+#### dict remove
 
 ```tcl
-#Creates or modifies entries in a dictionary.
-dict set myDict key1 "value1"
-dict set myDict key1 nestedKey1 "value2"
-puts $myDict
+#Removes one or more keys from the dictionary.
+set newDict [dict remove $myDict key1 key2]
 ```
+
+---
+
+#### dict size
+
+```tcl
+#Returns the number of key-value pairs in the dictionary.
+puts [dict size $myDict]
+```
+
+---
 
 ---
 
