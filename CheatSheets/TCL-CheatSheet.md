@@ -63,6 +63,12 @@ created: 2022-10-01
     - [conditional statements](#conditional-statements)
       - [if](#if)
       - [switch](#switch)
+    - [Proc](#proc)
+      - [Proc with Optional Arguments](#proc-with-optional-arguments)
+      - [Proc with Variable Number of Arguments](#proc-with-variable-number-of-arguments)
+      - [Returning Values](#returning-values)
+      - [Local Variables](#local-variables)
+      - [Error Handling in Procs](#error-handling-in-procs)
   - [Questasim TCL](#questasim-tcl)
     - [syntax](#syntax)
       - [vdel](#vdel)
@@ -668,6 +674,89 @@ switch $color {
 ```
 
 ---
+
+### Proc
+
+#### Proc with Optional Arguments
+
+```tcl
+#Procs in TCL can have optional arguments by specifying default values in the argument list. If the caller does not supply these arguments when calling the proc, the default values are used.
+proc random_num {min {max 100}} {
+    set range [expr {$max - $min + 1}]
+    set num [expr {$min + int(rand() * $range)}]
+    return $num
+}
+
+#Usage
+puts [random_num 10]      ;# Will generate a number between 10 and 100
+puts [random_num 10 50]   ;# Will generate a number between 10 and 50
+```
+
+---
+
+#### Proc with Variable Number of Arguments
+
+```tcl
+#TCL allows you to define procs that can accept a variable number of arguments. This is achieved by using args as the argument in the proc definition. Inside the proc, args is treated as a list containing all the arguments passed to the proc.
+proc process_args {args} {
+    puts "Number of arguments: [llength $args]"
+    puts "The arguments are: $args"
+    foreach arg $args {
+        puts "Processing argument: $arg"
+    }
+}
+
+#Usage
+process_args 1 2 3 4 5  ;# Processes five arguments
+process_args "hello" "world" ;# Processes two arguments
+```
+
+---
+
+#### Returning Values
+
+```tcl
+#Procs in TCL implicitly return the result of the last command executed in the proc. To explicitly return a value, use the return command.
+proc sum {a b} {
+    return [expr {$a + $b}]
+}
+puts [sum 5 3]  ;# Output will be 8
+```
+
+---
+
+#### Local Variables
+
+```tcl
+#Variables declared within a proc are local to that proc unless they are explicitly declared as global.
+proc demo_local_vars {} {
+    set local_var "I am local"
+    puts $local_var
+}
+demo_local_vars
+# puts $local_var  ;# This would raise an error because local_var is not accessible outside the proc.
+```
+
+---
+
+#### Error Handling in Procs
+
+```tcl
+#You can handle errors within a proc using catch.
+proc safe_div {a b} {
+    if {$b == 0} {
+        return -code error "Division by zero is not allowed"
+    }
+    return [expr {$a / $b}]
+}
+
+set result [catch {safe_div 10 0} err]
+if {$result != 0} {
+    puts "Error: $err"
+} else {
+    puts "Result: $err"  ;# $err contains the result if no error occurred
+}
+```
 
 ---
 
