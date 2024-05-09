@@ -11,7 +11,7 @@ A Collection of programming CheatSheets for FPGA developers to quick review whil
 - [VHDL-cheatsheet.md](./CheatSheets/VHDL-cheatsheet.md)
 - [verilog-cheatsheet.md](./CheatSheets/verilog-cheatsheet.md)
 - [system-verilog-cheatsheet.md](./CheatSheets/system-verilog-cheatsheet.md)
-- [python-cheatsheet.md](./CheatSheets/Python-cheatsheet.md)
+- [python-cheatsheet.md](./CheatSheets/python-cheatsheet.md)
 - [cpp-stl-cheatsheet.md](./CheatSheets/cpp-stl-cheatsheet.md)
 
 </details>
@@ -19,18 +19,18 @@ A Collection of programming CheatSheets for FPGA developers to quick review whil
 <details>
 <summary>verification 📄</summary>
 
-- [assertion-cheatsheet.md](./CheatSheets/assertion_cheatsheet.md)
-- [coverage-cheatsheet.md](./CheatSheets/coverage_cheatsheet.md)
-- [UVM-cheatsheet.md](./CheatSheets/UVM_cheatsheet.md)
+- [assertion-cheatsheet.md](./CheatSheets/assertion-cheatsheet.md)
+- [coverage-cheatsheet.md](./CheatSheets/coverage-cheatsheet.md)
+- [UVM-cheatsheet.md](./CheatSheets/UVM-cheatsheet.md)
 
 </details>
 
 <details>
 <summary>script 📄</summary>
 
-- [bash-cheatsheet.md](./CheatSheets/bash_cheatsheet.md)
-- [Matlab-cheatsheet.md](./CheatSheets/Matlab_cheatsheet.md)
-- [TCL-cheatsheet.md](./CheatSheets/TCL_cheatsheet.md)
+- [bash-cheatsheet.md](./CheatSheets/bash-cheatsheet.md)
+- [Matlab-cheatsheet.md](./CheatSheets/matlab-cheatsheet.md)
+- [TCL-cheatsheet.md](./CheatSheets/TCL-cheatsheet.md)
 
 </details>
 
@@ -65,7 +65,7 @@ A Collection of programming CheatSheets for FPGA developers to quick review whil
 
 - [conda-cheatsheet.md](./CheatSheets/conda-cheatsheet.md)
 - [pandas-cheatsheet.md](./CheatSheets/pandas-cheatsheet.md)
-- [numpy-cheatsheet.md](./CheatSheets/Numpy-cheatsheet.md)
+- [numpy-cheatsheet.md](./CheatSheets/numpy-cheatsheet.md)
 
 ### Machine Learning
 
