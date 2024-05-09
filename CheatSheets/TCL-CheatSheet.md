@@ -56,6 +56,10 @@ created: 2022-10-01
       - [dict merge](#dict-merge)
       - [dict remove](#dict-remove)
       - [dict size](#dict-size)
+    - [Looping](#looping)
+      - [while](#while)
+      - [for](#for)
+      - [foreach](#foreach)
   - [Questasim TCL](#questasim-tcl)
     - [syntax](#syntax)
       - [vdel](#vdel)
@@ -557,7 +561,57 @@ puts [dict size $myDict]
 
 ---
 
+### Looping
+
+#### while
+
+```tcl
+#The while loop in TCL repeatedly executes a block of code as long as a specified condition remains true.
+set count 10
+while {$count > 0} {
+    puts "Count is $count"
+    incr count -1
+}
+```
+
 ---
+
+#### for
+
+```tcl
+#The for loop is a versatile looping construct that allows you to initialize a variable, specify a continuation condition, and define an increment or decrement operation, all in one line.
+for {set i 10} {$i >= 0} {incr i -1} {
+    puts "i is $i"
+}
+```
+
+---
+
+#### foreach
+
+```tcl
+#The foreach loop is used to iterate over items in a list. It can handle multiple lists and variables, which makes it quite flexible.
+set myList [list apple banana cherry]
+foreach fruit $myList {
+    puts "Fruit: $fruit"
+}
+
+#You can use foreach to iterate over a list with two variables, each taking values two elements at a time from the list.
+set myList [list a 1 b 2 c 3]
+foreach {letter number} $myList {
+    puts "Letter: $letter, Number: $number"
+}
+
+#You can also iterate over multiple lists simultaneously with different variables
+set list1 [list a b c]
+set list2 [list 1 2 3]
+foreach ele1 $list1 ele2 $list2 {
+    puts "$ele1 is paired with $ele2"
+}
+```
+
+---
+
 
 ## Questasim TCL
 
