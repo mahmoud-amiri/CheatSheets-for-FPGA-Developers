@@ -69,6 +69,10 @@ created: 2022-10-01
       - [Returning Values](#returning-values)
       - [Local Variables](#local-variables)
       - [Error Handling in Procs](#error-handling-in-procs)
+    - [Files](#files)
+      - [Opening and Closing Files](#opening-and-closing-files)
+      - [Reading Files](#reading-files)
+      - [Error Handling in File Operations](#error-handling-in-file-operations)
   - [Questasim TCL](#questasim-tcl)
     - [syntax](#syntax)
       - [vdel](#vdel)
@@ -755,6 +759,71 @@ if {$result != 0} {
     puts "Error: $err"
 } else {
     puts "Result: $err"  ;# $err contains the result if no error occurred
+}
+```
+
+---
+
+### Files
+
+#### Opening and Closing Files
+
+```tcl
+#To work with files in TCL, you first need to open the file using the open command, which returns a file handle. You can specify different modes for accessing the file:
+
+#r: Open the file for reading only; the file must exist.
+#r+: Open the file for reading and writing; the file must exist.
+#w: Open the file for writing only; overwrite the file if it exists, create a new file if it does not.
+#w+: Open the file for reading and writing; overwrite the file if it exists, create a new file if it does not.
+#a: Open the file for appending; data written will be added to the end. Creates the file if it does not exist.
+#a+: Open the file for reading and appending; data written will be added to the end. Creates the file if it does not exist.
+
+set filename "example.txt"
+set filehandle [open $filename "w"]
+puts $filehandle "This is a test."
+close $filehandle
+```
+
+---
+
+#### Reading Files
+
+```tcl
+#Memory-Efficient Line-by-Line Reading: This method uses less memory as it reads one line at a time without loading the entire file into memory.
+proc read_file_less_memory {file_in} {
+    if {[file exists $file_in]} {
+        set filehandle [open $file_in "r"]
+        set file_data {}
+        while {[gets $filehandle line] >= 0} {
+            lappend file_data $line
+        }
+        close $filehandle
+        return $file_data
+    } else {
+        puts "File does not exist: $file_in"
+    }
+}
+
+#Reading Entire File at Once
+proc read_file {file_in} {
+    puts "Reading: $file_in"
+    if {[catch {set filehandle [open $file_in "r"]} err]} {
+        puts "Error opening file: $err"
+    } else {
+        set file_data [split [read $filehandle] "\n"]
+        close $filehandle
+        return $file_data
+    }
+}
+```
+
+---
+
+#### Error Handling in File Operations
+
+```tcl
+if {[catch {set filehandle [open "nonexistentfile.txt" "r"]} err]} {
+    puts "Error opening file: $err"
 }
 ```
 
