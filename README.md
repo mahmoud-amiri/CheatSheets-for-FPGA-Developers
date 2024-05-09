@@ -24,7 +24,6 @@ A Collection of programming CheatSheets for FPGA developers to quick review whil
 - [UVM-cheatsheet.md](./CheatSheets/UVM_cheatsheet.md)
 
 </details>
-<details>
 
 <details>
 <summary>script 📄</summary>
