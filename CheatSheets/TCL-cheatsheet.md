@@ -1221,50 +1221,32 @@ quit
 
 ### verification example
 
-#### dut.f
-
-```tcl
-<file1>.vhd
-<file2>.vhd
-<file3>.vhd
-```
-
----
-
-#### tb.f
-
-+incdir is a common command line argument used to specify include directories to the simulator.
--suppress is used to suppress specific warnings or errors during simulation or compilation. 
-
-```tcl
-<file1>.sv
-<file2>.sv
-<file3>.sv
-+incdir+<tb_classes>
--suppress 2286
-```
-
----
-
 #### test_config.tcl
 
 ```tcl
-# Define all tests in a dictionary
+# Define all tests in a dictionary with flexible coverage exclusion lines
 set tests {
     test1-name {
         {file_addr "/path/to/src1"}
         {file_name "file1"}
-        {line_number 123}
+        {line_numbers {123 125 127}}  # List of lines to exclude
         {description "Test 1 - Checking basic functionality"}
     }
     test2-name {
         {file_addr "/path/to/src2"}
         {file_name "file2"}
-        {line_number 456}
+        {line_numbers {456}}  # Single line or multiple lines can be specified
         {description "Test 2 - Edge case handling"}
+    }
+    test3-name {
+        {file_addr "/path/to/src3"}
+        {file_name "file3"}
+        {line_numbers {}}  # No lines to exclude
+        {description "Test 3 - Full coverage test"}
     }
 }
 return $tests
+
 ```
 
 #### run.do
@@ -1276,9 +1258,24 @@ if {[file exists "work"]} {
 }
 vlib work
 
-# Compile the Design Under Test (DUT) and Testbench (TB)
-vcom -f dut.f
-vlog -f tb.f
+# Compile the Design Under Test (DUT) files from the DUT folder
+# Assuming the DUT files are either Verilog (.v) or VHDL (.vhdl)
+foreach file [glob -nocomplain ./DUT/*.v ./DUT/*.vhdl] {
+    if {[string match "*.vhdl" $file]} {
+        vcom $file
+    } else {
+        vlog $file
+    }
+}
+
+# Setting the include directory for testbench compilation
+set include_dir "./TB/tb_classes"  # Update this path as necessary
+
+# Compile the Testbench (TB) files from the TB folder, including directory and suppressing specific warnings
+vlog -work work +incdir+$include_dir -suppress 2286
+foreach file [glob -nocomplain ./TB/*.sv] {
+    vlog $file
+}
 
 # Optimize the top module
 vopt top -o top_optimized +acc +cover=sbfec+dut_top
@@ -1286,15 +1283,18 @@ vopt top -o top_optimized +acc +cover=sbfec+dut_top
 # Load test configurations from an external file
 set tests [source test_config.tcl]
 
-# Procedure to run a test with coverage, logging, and result saving
-proc run_test {test_name file_addr file_name line_number description} {
+# Procedure to run a test with coverage, logging, and result saving, handling multiple coverage exclusions
+proc run_test {test_name file_addr file_name line_numbers description} {
     puts "Running test: $test_name - $description"
     vsim top_optimized -coverage +UVM_TESTNAME=$test_name
     set NoQuitOnFinish 1
     onbreak {resume}
     log /* -r
     run -all
-    coverage exclude -src $file_addr/$file_name.vhd -line $line_number -code s
+    # Exclude each specified line from coverage
+    foreach line $line_numbers {
+        coverage exclude -src $file_addr/$file_name.vhd -line $line -code s
+    }
     coverage attribute -name TESTNAME -value $test_name
     coverage save $test_name.ucdb
 }
@@ -1302,7 +1302,7 @@ proc run_test {test_name file_addr file_name line_number description} {
 # Iterate over the dictionary and run each test
 foreach {test_name test_config} $tests {
     dict with $test_config {
-        run_test $test_name $file_addr $file_name $line_number $description
+        run_test $test_name $file_addr $file_name $line_numbers $description
     }
 }
 
@@ -1313,6 +1313,7 @@ vcover report $merged_tests_name.ucdb -cvg -details
 
 # Exit QuestaSim
 quit
+
 
 ```
 
