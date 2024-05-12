@@ -8,18 +8,19 @@ created: 2022-10-18
 
 - [Git CheatSheet for Developers](#git-cheatsheet-for-developers)
   - [Git Configuration](#git-configuration)
-  - [Getting & Creating Projects](#getting--creating-projects)
+  - [Getting \& Creating Projects](#getting--creating-projects)
   - [Basic Commands](#basic-commands)
-  - [Branching & Merging](#branching--merging)
+  - [Branching \& Merging](#branching--merging)
   - [Discard Changes](#discard-changes)
   - [Set Upstream Branch](#set-upstream-branch)
-  - [Sharing & Updating Projects](#sharing--updating-projects)
-  - [Inspection & Comparison](#inspection--comparison)
+  - [Sharing \& Updating Projects](#sharing--updating-projects)
+  - [Inspection \& Comparison](#inspection--comparison)
   - [Tracking Path Changes](#tracking-path-changes)
   - [Setting up Alias](#setting-up-alias)
   - [Rewrite History](#rewrite-history)
   - [Deletion](#deletion)
   - [Temporary Commits](#temporary-commits)
+  - [Add SSH key](#add-ssh-key)
 
 # Git CheatSheet for Developers
 
@@ -197,5 +198,31 @@ created: 2022-10-18
 | `git stash list` | list stack-order of stashed file changes|
 | `git stash pop` | write working from top of stash stack|
 | `git stash drop` | discard the changes from top of stash stack|
+
+**[🔼Back to Top](#table-of-contents)**
+
+## Add SSH key
+
+1. Open Git Bash
+2. Generate SSH Key.Replace "your_email@example.com" with your github email address.
+
+```bash
+ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+```
+
+3. Specify the Key Save Location: When prompted, press Enter to save the key to the default location (~/.ssh/id_rsa).
+4. Enter a Passphrase (optional but recommended): You will be asked to enter a passphrase for additional security. You can press Enter if you don't want to set a passphrase.
+5. Adding Your SSH Key to the SSH-Agent
+
+```bash
+ls ~/.ssh
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_rsa
+cat ~/.ssh/id_rsa.pub
+```
+
+6. Copy the output.
+7. Go to GitHub.com and log in. Navigate to Settings > SSH and GPG keys. Click "New SSH key", paste your public key into the field, give it a descriptive title, and click "Add SSH key".
+
 
 **[🔼Back to Top](#table-of-contents)**
