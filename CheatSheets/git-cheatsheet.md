@@ -21,6 +21,7 @@ created: 2022-10-18
   - [Deletion](#deletion)
   - [Temporary Commits](#temporary-commits)
   - [Add SSH key](#add-ssh-key)
+  - [update submodule](#update-submodule)
 
 # Git CheatSheet for Developers
 
@@ -223,6 +224,34 @@ cat ~/.ssh/id_rsa.pub
 
 6. Copy the output.
 7. Go to GitHub.com and log in. Navigate to Settings > SSH and GPG keys. Click "New SSH key", paste your public key into the field, give it a descriptive title, and click "Add SSH key".
+
+## update submodule
+
+```bash
+#Navigate to Your Main Repository
+cd path/to/your/main/repository
+#Initialize and Update Submodules 
+git submodule update --init --recursive
+```
+
+```bash
+#Navigate to the Submodule Directory
+cd path/to/your/submodule
+#Fetch the Latest Changes in the Submodule
+git fetch
+#Fetch the Latest Changes in the Submodule
+git checkout main  # or the branch you want
+git pull origin main  # to update to the latest commit in that branch
+```
+
+```bash
+#Navigate Back to the Main Repository Directory
+cd path/to/your/main/repository
+#Update the Submodule Reference in the Main Repository
+git add path/to/your/submodule
+git commit -m "Updated submodule to latest version"
+git push origin main  # or your current branch
+```
 
 
 **[🔼Back to Top](#table-of-contents)**

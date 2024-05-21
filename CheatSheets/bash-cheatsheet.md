@@ -280,7 +280,7 @@ defghij
 
 **[🔼Back to Top](#table-of-contents)**
 
-### `Only show last 3 characters`
+ ### `Only show last 3 characters`
 
 > With tail to only show the last 3 characters:
 
