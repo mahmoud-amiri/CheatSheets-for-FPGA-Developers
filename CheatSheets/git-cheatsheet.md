@@ -21,8 +21,10 @@ created: 2022-10-18
   - [Deletion](#deletion)
   - [Temporary Commits](#temporary-commits)
   - [Add SSH key](#add-ssh-key)
-  - [Add a Submodule to a Project](#add-a-submodule-to-a-project)
-  - [update submodule](#update-submodule)
+  - [Submodules](#submodules)
+    - [Add a Submodule to a Project](#add-a-submodule-to-a-project)
+    - [Remove submodule from a project](#remove-submodule-from-a-project)
+    - [update submodule](#update-submodule)
 
 # Git CheatSheet for Developers
 
@@ -226,7 +228,9 @@ cat ~/.ssh/id_rsa.pub
 6. Copy the output.
 7. Go to GitHub.com and log in. Navigate to Settings > SSH and GPG keys. Click "New SSH key", paste your public key into the field, give it a descriptive title, and click "Add SSH key".
 
-## Add a Submodule to a Project
+## Submodules
+
+### Add a Submodule to a Project
 
 ```sh
 # Navigate to your main project directory
@@ -247,7 +251,27 @@ git push origin main  # or the appropriate branch
 
 ```
 
-## update submodule
+### Remove submodule from a project
+
+```sh
+# Remove the submodule entry from .gitmodules
+git config -f .gitmodules --remove-section submodule.path/to/submodule
+
+# Remove the submodule entry from Git configuration
+git config --remove-section submodule.path/to/submodule
+
+# Remove the submodule directory from the index
+git rm --cached path/to/submodule
+
+# Remove the submodule directory from your working directory
+rm -rf path/to/submodule
+
+# Commit the changes
+git add .gitmodules
+git commit -m "Removed submodule path/to/submodule"
+```
+
+### update submodule
 
 ```bash
 #Navigate to Your Main Repository
