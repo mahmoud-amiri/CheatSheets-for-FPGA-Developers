@@ -21,6 +21,7 @@ created: 2022-10-18
   - [Deletion](#deletion)
   - [Temporary Commits](#temporary-commits)
   - [Add SSH key](#add-ssh-key)
+  - [Add a Submodule to a Project](#add-a-submodule-to-a-project)
   - [update submodule](#update-submodule)
 
 # Git CheatSheet for Developers
@@ -224,6 +225,27 @@ cat ~/.ssh/id_rsa.pub
 
 6. Copy the output.
 7. Go to GitHub.com and log in. Navigate to Settings > SSH and GPG keys. Click "New SSH key", paste your public key into the field, give it a descriptive title, and click "Add SSH key".
+
+## Add a Submodule to a Project
+
+```sh
+# Navigate to your main project directory
+cd path/to/your/main/project
+
+# Add the submodule
+git submodule add https://github.com/username/repository.git path/to/submodule
+
+# Initialize the submodule
+git submodule update --init --recursive
+
+# Add and commit the changes
+git add .gitmodules path/to/submodule
+git commit -m "Added submodule at path/to/submodule"
+
+# Push the changes to your remote repository
+git push origin main  # or the appropriate branch
+
+```
 
 ## update submodule
 
